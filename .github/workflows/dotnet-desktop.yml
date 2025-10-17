@@ -1,0 +1,12 @@
+name: Run (deliberately flaky) tests with retry
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/sdk:8.0.415@sha256:df1aebc5fd72a1315f34eda24206f195d5ca00ccf2e3009947a74c5a67166cbb
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - run: pwsh ./run-tests.ps1
