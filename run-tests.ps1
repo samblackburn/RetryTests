@@ -16,6 +16,13 @@ $root.'test-run'.'test-suite'.'test-suite'.'test-suite'.'test-case' `
     if ($LASTEXITCODE -ne 0) {
         $failedTwice++
     }
+    $root = [xml](Get-Content ".\TestResults\retry-$resultFile.xml")
+    $testCount = $root.'test-run'.'test-suite'.'test-suite'.'test-suite'.'test-case' `
+    | Measure-Object `
+    | Select-Object -ExpandProperty Count
+    if ($testCount -ne 1) {
+        throw "Filter should have matched 1 test ($testName), but matched $testCount tests"
+    }
 }
 
 "Tests failed after retry: $failedTwice"
