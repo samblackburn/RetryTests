@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 dotnet test --logger:"nunit;LogFileName=attempt1.xml"
 if ($LASTEXITCODE -eq 0) {
     "Tests passed first time"
