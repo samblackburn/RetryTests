@@ -11,9 +11,11 @@ $root = [xml](Get-Content .\TestResults\attempt1.xml)
 $root.'test-run'.'test-suite'.'test-suite'.'test-suite'.'test-case' `
 | Where-Object { $_.result -eq "Failed" } `
 | ForEach-Object {
-    # Escape parentheses around test cases
-    $testName = $_.fullname -replace '\(', '\(' -replace '\)', '\)'
-    $escapedTestName = [uri]::EscapeDataString(($testName -replace '!', '\!'))
+    # Escape parentheses around test cases (and exclamation marks in strings which seem to be special)
+    $testName = $_.fullname -replace '\(', '\(' -replace '\)', '\)' -replace '!', '\!'
+    # Then url-encode everything
+    $escapedTestName = [uri]::EscapeDataString($testName)
+    # Filename uses underscores to be more readable
     $resultFile = $_.fullname -replace '[^a-zA-Z0-9]', '_'
     "Retrying test $testName with filter $escapedTestName"
     dotnet test --filter "FullyQualifiedName=$escapedTestName" --no-build --logger:"nunit;LogFileName=retry-$resultFile.xml"
