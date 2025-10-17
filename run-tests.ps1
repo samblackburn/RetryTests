@@ -11,9 +11,10 @@ $root.'test-run'.'test-suite'.'test-suite'.'test-suite'.'test-case' `
 | ForEach-Object {
     # Escape parentheses around test cases
     $testName = $_.fullname -replace '\(', '\(' -replace '\)', '\)'
-    $resultFile = $testName -replace '[^a-zA-Z0-9]', '_'
-    "Retrying test: $testName"
-    dotnet test --filter "FullyQualifiedName=$testName" --no-build --logger:"nunit;LogFileName=retry-$resultFile.xml"
+    $escapedTestName = [uri]::EscapeDataString($testName)
+    $resultFile = $_.fullname -replace '[^a-zA-Z0-9]', '_'
+    "Retrying test $testName with filter $escapedTestName"
+    dotnet test --filter "FullyQualifiedName=$escapedTestName" --no-build --logger:"nunit;LogFileName=retry-$resultFile.xml"
     if ($LASTEXITCODE -ne 0) {
         $failedTwice++
     }
