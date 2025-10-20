@@ -13,3 +13,8 @@
  - Filter by class name (probably easy)
  - Parameter values including characters `"£` (probably hard)
  
+### Where's the code?
+ - The magic is all in [the Powershell script](run-tests.ps1).
+
+### Future work
+ - Take a look at [FSCheck](https://github.com/fscheck/FsCheck/blob/master/src/FsCheck/Runner.fs), it knows how to run a subset of tests
